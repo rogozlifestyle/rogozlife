@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Trainer — Corporate IT Skills Training Platform for South Africa</title>
+<link href="https://fonts.googleapis.com/css2?family=Space_Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --orange: #FF6B00;
+    --orange2: #FF9A3C;
+    --orange-glow: rgba(255, 107, 0, 0.15);
+    --dark: #080808;
+    --dark2: #0f0f0f;
+    --dark3: #141414;
+    --mid: #1c1c1c;
+    --border: rgba(255,255,255,0.07);
+    --border-orange: rgba(255,107,0,0.3);
+    --text: #e8e8e0;
+    --muted: #6a6a62;
+    --muted2: #3a3a32;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* SCANLINE */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 1000; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  }
+
+  /* GLOW CURSOR */
+  .glow-cursor {
+    position: fixed;
+    width: 350px; height: 350px; border-radius: 50%;
+    pointer-events: none; z-index: 998;
+    background: radial-gradient(circle, rgba(255,107,0,0.05) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease, top 0.12s ease;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,8,8,0.9);
+    backdrop-filter: blur(16px);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo-icon {
+    width: 36px; height: 36px;
+    background: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 18px; color: #000;
+    letter-spacing: 0.05em;
+  }
+  .nav-logo-text {
+    font-family: 'Bebas Neue';
+    font-size: 22px; letter-spacing: 0.15em; color: #fff;
+  }
+  .nav-logo-text span { color: var(--orange); }
+  .nav-links {
+    display: flex; gap: 36px;
+    font-size: 12px; letter-spacing: 0.1em; color: var(--muted);
+    text-transform: uppercase; font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--orange); transition: color 0.2s; }
+  .nav-cta {
+    background: var(--orange); color: #000;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 10px 24px; font-weight: 700; cursor: pointer;
+    border: none; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--orange2); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 76px;
+    position: relative; overflow: hidden;
+  }
+  .hero-left {
+    padding: 80px 0 80px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.2em; color: var(--orange);
+    text-transform: uppercase; border: 1px solid var(--border-orange);
+    padding: 7px 16px; width: fit-content; margin-bottom: 40px;
+    box-shadow: 0 0 24px rgba(255,107,0,0.1);
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero-eyebrow {
+    font-size: 12px; letter-spacing: 0.2em; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 16px; font-weight: 400;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue';
+    font-size: clamp(70px, 8vw, 120px);
+    line-height: 0.92; letter-spacing: 0.01em; color: #fff;
+    margin-bottom: 28px;
+  }
+  .hero-title .line-orange { color: var(--orange); display: block; text-shadow: 0 0 60px rgba(255,107,0,0.25); }
+  .hero-title .line-outline {
+    display: block;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+    color: transparent;
+  }
+  .hero-subtitle {
+    font-size: 15px; line-height: 1.75; color: var(--muted);
+    max-width: 460px; margin-bottom: 44px;
+    padding-left: 20px;
+    border-left: 2px solid var(--orange);
+  }
+  .hero-cta-row {
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--orange); color: #000;
+    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 15px 32px; border: none; cursor: pointer; font-weight: 700;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--orange2); transform: translateY(-1px); }
+  .btn-ghost {
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; padding: 15px 24px;
+    border: 1px solid var(--border); transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--border-orange); color: var(--orange); }
+  .hero-trust {
+    margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .hero-trust-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--muted2);
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .hero-trust-logos {
+    display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+  }
+  .trust-logo {
+    font-size: 12px; letter-spacing: 0.08em; color: var(--muted);
+    font-weight: 600; opacity: 0.5; transition: opacity 0.2s;
+    text-transform: uppercase;
+  }
+  .trust-logo:hover { opacity: 1; color: var(--orange); }
+
+  /* HERO RIGHT */
+  .hero-right {
+    position: relative; overflow: hidden;
+    border-left: 1px solid var(--border);
+    background: radial-gradient(ellipse at 60% 30%, rgba(255,107,0,0.04) 0%, transparent 65%);
+  }
+  .hero-visual {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dashboard-mockup {
+    width: 480px; max-width: 90%;
+    background: var(--dark3); border: 1px solid var(--border);
+    box-shadow: 0 0 80px rgba(255,107,0,0.08), 0 0 0 1px var(--border);
+  }
+  .dash-header {
+    background: var(--dark2); padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dash-dots { display: flex; gap: 7px; }
+  .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dash-dot:nth-child(1) { background: #ff5f56; }
+  .dash-dot:nth-child(2) { background: #ffbd2e; }
+  .dash-dot:nth-child(3) { background: #27c93f; }
+  .dash-title { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+  .dash-body { padding: 24px; }
+  .dash-user-row {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 24px;
+    padding: 14px 16px; background: var(--mid); border: 1px solid var(--border);
+  }
+  .dash-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), #ff3d00);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #000;
+  }
+  .dash-user-info { flex: 1; }
+  .dash-user-name { font-size: 13px; color: #fff; font-weight: 600; margin-bottom: 2px; }
+  .dash-user-role { font-size: 11px; color: var(--muted); }
+  .dash-ai-badge {
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    background: rgba(255,107,0,0.1); color: var(--orange);
+    border: 1px solid var(--border-orange); padding: 4px 10px;
+  }
+  .dash-progress-section { margin-bottom: 20px; }
+  .dash-progress-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: var(--muted); margin-bottom: 8px;
+  }
+  .dash-progress-label span:last-child { color: var(--orange); font-weight: 600; }
+  .dash-progress-bar {
+    height: 4px; background: var(--mid); border-radius: 2px; overflow: hidden;
+  }
+  .dash-progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--orange), var(--orange2));
+    border-radius: 2px; transition: width 1.5s ease;
+  }
+  .dash-modules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .dash-module {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    background: var(--mid); border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .dash-module:hover { border-color: var(--border-orange); }
+  .dash-module-icon {
+    width: 32px; height: 32px; display: flex; align-items: center;
+    justify-content: center; font-size: 14px;
+    background: var(--dark3); border: 1px solid var(--border); flex-shrink: 0;
+  }
+  .dash-module-info { flex: 1; }
+  .dash-module-name { font-size: 12px; color: #fff; margin-bottom: 2px; font-weight: 500; }
+  .dash-module-sub { font-size: 10px; color: var(--muted); }
+  .dash-module-status {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 8px;
+  }
+  .status-active { background: rgba(255,107,0,0.1); color: var(--orange); border: 1px solid var(--border-orange); }
+  .status-done { background: rgba(39,201,63,0.1); color: #27c93f; border: 1px solid rgba(39,201,63,0.2); }
+  .status-locked { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border); }
+  .dash-stats-row {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+  }
+  .dash-stat {
+    padding: 14px 12px; background: var(--mid); border: 1px solid var(--border); text-align: center;
+  }
+  .dash-stat-num {
+    font-family: 'Bebas Neue'; font-size: 28px; color: var(--orange); line-height: 1;
+  }
+  .dash-stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+  .hero-stats {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: grid; grid-template-columns: repeat(3,1fr);
+    border-top: 1px solid var(--border);
+    gap: 1px; background: var(--border);
+  }
+  .hero-stat {
+    background: rgba(8,8,8,0.95); padding: 22px 28px;
+    backdrop-filter: blur(8px);
+  }
+  .stat-num {
+    font-family: 'Bebas Neue'; font-size: 38px; color: var(--orange); line-height: 1; margin-bottom: 4px;
+  }
+  .stat-label { font-size: 10px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--dark2); overflow: hidden; padding: 13px 0;
+  }
+  .ticker-inner {
+    display: flex; gap: 56px; white-space: nowrap;
+    animation: ticker 50s linear infinite; width: max-content;
+  }
+  .ticker-item { font-size: 11px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+  .ticker-dot { color: var(--orange); margin-right: 14px; }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── SECTIONS ── */
+  .section { padding: 100px 48px; border-bottom: 1px solid var(--border); }
+  .section-tag {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 52px;
+  }
+  .section-num { font-family: 'DM Mono'; font-size: 12px; color: var(--muted); letter-spacing: 0.2em; }
+  .section-line { flex: 1; height: 1px; background: var(--border); max-width: 56px; }
+  .section-title-label { font-size: 11px; letter-spacing: 0.25em; color: var(--orange); text-transform: uppercase; }
+  .section-h2 {
+    font-family: 'Bebas Neue'; font-size: clamp(40px, 5vw, 68px);
+    line-height: 1; color: #fff; margin-bottom: 18px; letter-spacing: 0.02em;
+  }
+  .section-h2 em { font-style: normal; color: var(--orange); }
+  .section-lead {
+    font-size: 15px; line-height: 1.8; color: var(--muted);
+    max-width: 640px; margin-bottom: 56px;
+  }
+
+  /* ── PROBLEM BAND ── */
+  .problem-band {
+    background: var(--dark3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 56px 48px;
+  }
+  .problem-band-inner {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .problem-big-text {
+    font-family: 'Bebas Neue'; font-size: 80px; line-height: 0.9;
+    color: var(--orange); opacity: 0.15; user-select: none;
+  }
+  .problem-stats { display: flex; flex-direction: column; gap: 24px; }
+  .problem-stat-row {
+    display: flex; align-items: flex-start; gap: 20px; padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .problem-stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .problem-stat-num {
+    font-family: 'Bebas Neue'; font-size: 48px; color: var(--orange); line-height: 1;
+    min-width: 100px;
+  }
+  .problem-stat-text { font-size: 14px; color: var(--muted); line-height: 1.7; padding-top: 6px; }
+  .problem-stat-text strong { color: var(--text); }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .feature-card {
+    background: var(--dark2); padding: 40px 36px;
+    transition: background 0.3s; cursor: default; position: relative; overflow: hidden;
+  }
+  .feature-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+    transform: translateX(-100%); transition: transform 0.5s;
+  }
+  .feature-card:hover::after { transform: translateX(0); }
+  .feature-card:hover { background: var(--dark3); }
+  .feature-icon {
+    width: 48px; height: 48px; margin-bottom: 24px;
+    background: rgba(255,107,0,0.08); border: 1px solid var(--border-orange);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .feature-num {
+    font-family: 'Bebas Neue'; font-size: 44px; color: var(--muted2);
+    line-height: 1; margin-bottom: 12px; position: absolute; top: 24px; right: 28px;
+    opacity: 0.5;
+  }
+  .feature-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--orange);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .feature-title { font-size: 18px; color: #fff; margin-bottom: 14px; font-weight: 600; line-height: 1.3; }
+  .feature-desc { font-size: 13px; line-height: 1.8; color: var(--muted); }
+  .feature-tag {
+    display: inline-block; margin-top: 20px; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 4px 12px;
+    background: rgba(255,107,0,0.06); color: var(--orange); border: 1px solid var(--border-orange);
+  }
+
+  /* ── INDUSTRIES ── */
+  .industries-grid {
+    display: grid; grid-template-columns: repeat(2,1fr); gap: 16px;
+  }
+  .industry-card {
+    border: 1px solid var(--border); padding: 36px 32px;
+    background: var(--dark2); transition: all 0.3s; cursor: pointer; position: relative;
+  }
+  .industry-card:hover { border-color: var(--border-orange); background: var(--dark3); }
+  .industry-card:hover .industry-arrow { transform: translateX(6px); }
+  .industry-header {
+    display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px;
+  }
+  .industry-icon-wrap {
+    width: 52px; height: 52px; background: rgba(255,107,0,0.08);
+    border: 1px solid var(--border-orange);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .industry-tag {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--orange); background: rgba(255,107,0,0.08);
+    border: 1px solid var(--border-orange); padding: 4px 12px;
+    height: fit-content;
+  }
+  .industry-title { font-size: 22px; color: #fff; font-weight: 600; margin-bottom: 12px; line-height: 1.25; }
+  .industry-desc { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+  .industry-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .industry-feature {
+    display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted);
+  }
+  .industry-feature::before {
+    content: '→'; color: var(--orange); font-size: 11px; flex-shrink: 0;
+  }
+  .industry-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 20px; border-top: 1px solid var(--border);
+  }
+  .industry-clients { font-size: 11px; color: var(--muted2); letter-spacing: 0.05em; }
+  .industry-arrow { font-size: 16px; color: var(--orange); transition: transform 0.2s; }
+
+  /* ── COMPLIANCE ── */
+  .compliance-section { background: var(--dark3); }
+  .compliance-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .compliance-item {
+    background: var(--dark3); padding: 36px 28px;
+    transition: background 0.3s; text-align: center;
+  }
+  .compliance-item:hover { background: var(--mid); }
+  .compliance-badge {
+    display: inline-block; margin-bottom: 16px;
+    font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 0.08em;
+    color: var(--orange); padding: 12px 20px;
+    border: 1px solid var(--border-orange); background: rgba(255,107,0,0.05);
+    box-shadow: 0 0 24px rgba(255,107,0,0.08);
+  }
+  .compliance-name { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 8px; }
+  .compliance-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .compliance-check {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-top: 16px; font-size: 11px; color: #27c93f; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .howto-steps {
+    display: grid; grid-template-columns: repeat(5,1fr); position: relative;
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .howto-step {
+    background: var(--dark2); padding: 36px 28px;
+    transition: background 0.3s; cursor: default; position: relative;
+  }
+  .howto-step:hover { background: var(--dark3); }
+  .howto-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; right: -14px; top: 36px;
+    color: var(--orange); font-size: 16px; z-index: 2;
+    background: var(--border); width: 28px; text-align: center;
+  }
+  .howto-num {
+    font-family: 'Bebas Neue'; font-size: 52px; color: var(--muted2);
+    line-height: 1; margin-bottom: 16px;
+  }
+  .howto-title { font-size: 14px; color: var(--orange); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .howto-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+  /* ── ROI ── */
+  .roi-section {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .roi-left {
+    padding: 100px 48px; border-right: 1px solid var(--border);
+  }
+  .roi-right { padding: 100px 48px; }
+  .roi-metrics { display: flex; flex-direction: column; gap: 24px; margin-top: 48px; }
+  .roi-metric {
+    padding: 24px 28px; border: 1px solid var(--border);
+    background: var(--dark2); transition: all 0.3s;
+  }
+  .roi-metric:hover { border-color: var(--border-orange); }
+  .roi-metric-num {
+    font-family: 'Bebas Neue'; font-size: 56px; color: var(--orange); line-height: 1; margin-bottom: 6px;
+  }
+  .roi-metric-label { font-size: 13px; color: #fff; font-weight: 500; margin-bottom: 6px; }
+  .roi-metric-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .pricing-card {
+    background: var(--dark3); border: 1px solid var(--border-orange);
+    padding: 40px; position: relative; overflow: hidden;
+    box-shadow: 0 0 60px rgba(255,107,0,0.06);
+  }
+  .pricing-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--orange2));
+  }
+  .pricing-label {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 24px;
+  }
+  .pricing-price {
+    font-family: 'Bebas Neue'; font-size: 80px; color: #fff; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-price sup { font-size: 32px; color: var(--orange); vertical-align: top; padding-top: 16px; }
+  .pricing-period { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+  .pricing-features { display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; }
+  .pricing-feature {
+    display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text);
+  }
+  .pricing-feature-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(255,107,0,0.1); border: 1px solid var(--border-orange);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--orange); flex-shrink: 0;
+  }
+  .pricing-btn {
+    width: 100%; background: var(--orange); color: #000;
+    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 16px; border: none; cursor: pointer; font-weight: 700;
+    transition: background 0.2s;
+  }
+  .pricing-btn:hover { background: var(--orange2); }
+  .pricing-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
+
+  /* ── TESTIMONIAL ── */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .testimonial-card {
+    background: var(--dark2); padding: 40px 36px; transition: background 0.3s;
+  }
+  .testimonial-card:hover { background: var(--dark3); }
+  .testimonial-quote {
+    font-family: 'Bebas Neue'; font-size: 60px; color: var(--orange);
+    line-height: 0.7; margin-bottom: 20px; opacity: 0.4;
+  }
+  .testimonial-text {
+    font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 28px;
+    font-style: italic;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .testimonial-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), #c43d00);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #000;
+  }
+  .testimonial-name { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 2px; }
+  .testimonial-role { font-size: 11px; color: var(--muted); }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    padding: 120px 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    background: radial-gradient(ellipse at 70% 50%, rgba(255,107,0,0.04) 0%, transparent 60%);
+  }
+  .cta-title {
+    font-family: 'Bebas Neue'; font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.92; letter-spacing: 0.01em; color: #fff;
+    margin-bottom: 20px;
+  }
+  .cta-title .accent { color: var(--orange); display: block; }
+  .cta-desc { font-size: 15px; color: var(--muted); line-height: 1.8; max-width: 440px; }
+  .cta-form { display: flex; flex-direction: column; gap: 16px; }
+  .cta-input {
+    background: var(--dark3); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Space Grotesk'; font-size: 14px;
+    padding: 15px 20px; outline: none; transition: border-color 0.2s;
+  }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-input:focus { border-color: var(--border-orange); }
+  .cta-select {
+    background: var(--dark3); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Space Grotesk'; font-size: 14px;
+    padding: 15px 20px; outline: none; transition: border-color 0.2s;
+    -webkit-appearance: none; cursor: pointer;
+  }
+  .cta-select:focus { border-color: var(--border-orange); }
+  .cta-btn {
+    background: var(--orange); color: #000;
+    font-family: 'Space Grotesk'; font-size: 13px; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 17px 32px; border: none; cursor: pointer;
+    font-weight: 700; transition: all 0.2s;
+  }
+  .cta-btn:hover { background: var(--orange2); }
+  .cta-note { font-size: 11px; color: var(--muted2); line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); background: var(--dark2);
+  }
+  .footer-main {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    padding: 64px 48px 48px;
+  }
+  .footer-brand { }
+  .footer-logo {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .footer-logo-icon {
+    width: 32px; height: 32px; background: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 16px; color: #000;
+  }
+  .footer-logo-text {
+    font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 0.15em; color: #fff;
+  }
+  .footer-logo-text span { color: var(--orange); }
+  .footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; margin-bottom: 24px; }
+  .footer-compliance-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .footer-badge {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 10px; color: var(--orange);
+    border: 1px solid var(--border-orange); background: rgba(255,107,0,0.05);
+  }
+  .footer-col-title {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 20px; font-weight: 600;
+  }
+  .footer-col-links { display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+  .footer-col-links a:hover { color: var(--orange); }
+  .footer-bottom {
+    padding: 20px 48px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 11px; color: var(--muted2); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 11px; color: var(--muted2); transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.25s; }
+  .delay-3 { animation-delay: 0.4s; }
+  .delay-4 { animation-delay: 0.55s; }
+  .delay-5 { animation-delay: 0.7s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .industries-grid { grid-template-columns: 1fr; }
+    .compliance-grid { grid-template-columns: repeat(2,1fr); }
+    .howto-steps { grid-template-columns: repeat(3,1fr); }
+    .roi-section { grid-template-columns: 1fr; }
+    .roi-left { border-right: none; border-bottom: 1px solid var(--border); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .cta-section { grid-template-columns: 1fr; gap: 48px; }
+    .footer-main { grid-template-columns: 1fr 1fr; }
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .section { padding: 64px 24px; }
+    .hero-left { padding: 60px 24px; }
+  }
+  @media (max-width: 640px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .compliance-grid { grid-template-columns: 1fr; }
+    .howto-steps { grid-template-columns: 1fr 1fr; }
+    .footer-main { grid-template-columns: 1fr; }
+    .problem-band-inner { grid-template-columns: 1fr; }
+    .problem-big-text { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-cursor" id="glow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">DT</div>
+    <div class="nav-logo-text">Digital <span>Trainer</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Platform</a>
+    <a href="#industries">Industries</a>
+    <a href="#compliance">Compliance</a>
+    <a href="#roi">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Request Demo →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge fade-up delay-1">
+      <div class="hero-badge-dot"></div>
+      B2B SaaS · South Africa · Corporate Training
+    </div>
+    <div class="hero-eyebrow fade-up delay-2">AI-Powered Corporate Learning Platform</div>
+    <h1 class="hero-title fade-up delay-3">
+      BUILD YOUR
+      <span class="line-orange">DIGITAL</span>
+      <span class="line-outline">WORKFORCE</span>
+    </h1>
+    <p class="hero-subtitle fade-up delay-4">
+      The only B2B training platform built for South Africa — AI-personalised IT skills in cybersecurity, data analytics and cloud, with full POPIA, B-BBEE and SETA compliance. Industry-specific simulations for banking, mining and telecoms.
+    </p>
+    <div class="hero-cta-row fade-up delay-5">
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get a Free Demo <span>→</span></button>
+      <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Explore Platform</button>
+    </div>
+    <div class="hero-trust fade-up delay-5">
+      <div class="hero-trust-label">Designed for South Africa's leading enterprises</div>
+      <div class="hero-trust-logos">
+        <span class="trust-logo">Standard Bank</span>
+        <span class="trust-logo">ABSA</span>
+        <span class="trust-logo">Sanlam</span>
+        <span class="trust-logo">MTN</span>
+        <span class="trust-logo">Sibanye-Stillwater</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="dashboard-mockup">
+        <div class="dash-header">
+          <div class="dash-dots">
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+          </div>
+          <div class="dash-title">Digital Trainer — AI Dashboard</div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-user-row">
+            <div class="dash-avatar">TM</div>
+            <div class="dash-user-info">
+              <div class="dash-user-name">Thabo Mokoena</div>
+              <div class="dash-user-role">Risk Analyst · Standard Bank</div>
+            </div>
+            <div class="dash-ai-badge">AI Adapted</div>
+          </div>
+          <div class="dash-progress-section">
+            <div class="dash-progress-label">
+              <span>Cybersecurity Track — FSCA Compliance</span>
+              <span>74%</span>
+            </div>
+            <div class="dash-progress-bar">
+              <div class="dash-progress-fill" style="width: 74%"></div>
+            </div>
+          </div>
+          <div class="dash-modules">
+            <div class="dash-module">
+              <div class="dash-module-icon">🎣</div>
+              <div class="dash-module-info">
+                <div class="dash-module-name">Phishing Simulation — Advanced</div>
+                <div class="dash-module-sub">Interactive · Proctored · 45 min</div>
+              </div>
+              <div class="dash-module-status status-active">Active</div>
+            </div>
+            <div class="dash-module">
+              <div class="dash-module-icon">🛡️</div>
+              <div class="dash-module-info">
+                <div class="dash-module-name">Incident Response (FSCA)</div>
+                <div class="dash-module-sub">Scenario-based · 60 min</div>
+              </div>
+              <div class="dash-module-status status-done">Done</div>
+            </div>
+            <div class="dash-module">
+              <div class="dash-module-icon">☁️</div>
+              <div class="dash-module-info">
+                <div class="dash-module-name">Cloud Security Architecture</div>
+                <div class="dash-module-sub">Theory + Lab · 90 min</div>
+              </div>
+              <div class="dash-module-status status-locked">Locked</div>
+            </div>
+          </div>
+          <div class="dash-stats-row">
+            <div class="dash-stat">
+              <div class="dash-stat-num">12</div>
+              <div class="dash-stat-label">Modules Done</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-num">94%</div>
+              <div class="dash-stat-label">Skill Score</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-num">3.2×</div>
+              <div class="dash-stat-label">ROI Gain</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-num">$500</div>
+        <div class="stat-label">Starting / month</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">3×</div>
+        <div class="stat-label">Avg. ROI for clients</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Local compliance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Cybersecurity Training</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Data Analytics Skills</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Cloud Infrastructure</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> POPIA Compliance</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> B-BBEE Reporting</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> SETA Accredited</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> AI Personalisation</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Offline Mode</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Moodle / LTI / xAPI</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Proctored Assessments</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Multilingual Interface</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> FSCA-Ready Simulations</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Cybersecurity Training</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Data Analytics Skills</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Cloud Infrastructure</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> POPIA Compliance</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> B-BBEE Reporting</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> SETA Accredited</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> AI Personalisation</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Offline Mode</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Moodle / LTI / xAPI</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Proctored Assessments</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> Multilingual Interface</span>
+    <span class="ticker-item"><span class="ticker-dot">◎</span> FSCA-Ready Simulations</span>
+  </div>
+</div>
+
+<!-- PROBLEM BAND -->
+<div class="problem-band">
+  <div class="problem-band-inner">
+    <div class="problem-big-text">THE<br>GAP</div>
+    <div class="problem-stats">
+      <div class="problem-stat-row">
+        <div class="problem-stat-num">4.2M</div>
+        <div class="problem-stat-text"><strong>Unfilled digital jobs</strong> projected across Sub-Saharan Africa by 2027, with South Africa accounting for the largest share of the skills deficit in financial services and mining.</div>
+      </div>
+      <div class="problem-stat-row">
+        <div class="problem-stat-num">67%</div>
+        <div class="problem-stat-text"><strong>Of South African enterprises</strong> report that regulatory penalties from POPIA and FSCA are partly driven by under-trained staff — not malicious breaches.</div>
+      </div>
+      <div class="problem-stat-row">
+        <div class="problem-stat-num">$2.1B</div>
+        <div class="problem-stat-text"><strong>Lost annually</strong> to cybercrime in South Africa — most incidents trace back to human error and inadequate phishing / incident response training.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-tag">
+    <span class="section-num">01</span>
+    <div class="section-line"></div>
+    <span class="section-title-label">Platform Capabilities</span>
+  </div>
+  <h2 class="section-h2">EVERYTHING YOUR <em>ENTERPRISE</em> NEEDS</h2>
+  <p class="section-lead">A complete AI-driven corporate learning suite built for the unique infrastructure, regulatory, and workforce realities of South Africa — not a Western platform retrofitted for Africa.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <div class="feature-icon">🤖</div>
+      <div class="feature-label">Core Engine</div>
+      <div class="feature-title">AI Personalisation Engine</div>
+      <div class="feature-desc">Our adaptive AI analyses each employee's proficiency in real time and adjusts content complexity, pacing, and scenario difficulty. A junior analyst and a CISO can be trained on the same platform simultaneously — each receiving the right challenge level.</div>
+      <span class="feature-tag">Adaptive Learning</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <div class="feature-icon">🎯</div>
+      <div class="feature-label">Assessment</div>
+      <div class="feature-title">Proctored Skill Simulators</div>
+      <div class="feature-desc">Hands-on technical simulators with AI proctoring verify real competencies — not just multiple-choice memory. Results are tamper-proof and accepted by SETA as evidence of workplace skills. Full audit trail for compliance reporting.</div>
+      <span class="feature-tag">Verified Skills</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <div class="feature-icon">📶</div>
+      <div class="feature-label">Infrastructure</div>
+      <div class="feature-title">Offline-First Architecture</div>
+      <div class="feature-desc">Designed for South Africa's load-shedding reality. Full course delivery, simulation playback and assessment work without internet or power continuity. Sync automatically when connectivity resumes. Critical for mining and remote operations.</div>
+      <span class="feature-tag">Load-Shedding Ready</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <div class="feature-icon">🔗</div>
+      <div class="feature-label">Integration</div>
+      <div class="feature-title">LMS Integration via LTI & xAPI</div>
+      <div class="feature-desc">Plug directly into your existing Moodle, Blackboard or any LTI-compliant LMS in under 48 hours. xAPI (Tin Can) data feeds your existing analytics dashboards with granular learner progress. Zero platform migration required.</div>
+      <span class="feature-tag">Moodle · Blackboard · SAP</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">05</div>
+      <div class="feature-icon">🌍</div>
+      <div class="feature-label">Localisation</div>
+      <div class="feature-title">Multilingual Interface</div>
+      <div class="feature-desc">Available in English, Zulu, Xhosa, Afrikaans, Sotho and Tswana — with AI-translated course scenarios that preserve technical precision. The only corporate IT training platform supporting all 11 official South African languages.</div>
+      <span class="feature-tag">11 SA Languages</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">06</div>
+      <div class="feature-icon">📊</div>
+      <div class="feature-label">Analytics</div>
+      <div class="feature-title">Measurable ROI Dashboard</div>
+      <div class="feature-desc">Real-time analytics quantify training impact: incident reduction rates, time-to-competency, regulatory audit readiness scores, and B-BBEE skills development spend tracking. Present verified ROI to your board and SETA with one click.</div>
+      <span class="feature-tag">Board-Ready Reporting</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="background: var(--dark3);">
+  <div class="section-tag">
+    <span class="section-num">02</span>
+    <div class="section-line"></div>
+    <span class="section-title-label">How It Works</span>
+  </div>
+  <h2 class="section-h2">FROM <em>ONBOARDING</em> TO RESULTS IN 5 STEPS</h2>
+  <p class="section-lead">Implementation takes less than two weeks. No large IT project, no platform migration, no disruption to existing workflows.</p>
+  <div class="howto-steps">
+    <div class="howto-step">
+      <div class="howto-num">01</div>
+      <div class="howto-title">Deploy & Integrate</div>
+      <div class="howto-desc">Connect to your Moodle or HRIS via LTI/xAPI in under 48 hours. Single sign-on with your existing Active Directory or Azure AD.</div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">02</div>
+      <div class="howto-title">AI Baseline Assessment</div>
+      <div class="howto-desc">Each employee completes a 20-minute diagnostic. The AI engine maps current skill levels and creates personalised learning paths.</div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">03</div>
+      <div class="howto-title">Industry Training</div>
+      <div class="howto-desc">Staff complete sector-specific simulations — phishing for finance, OT security for mining — at their own pace, online or offline.</div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">04</div>
+      <div class="howto-title">Proctored Verification</div>
+      <div class="howto-desc">Skills are verified through AI-proctored assessments. Results are SETA-compliant and feed directly into your compliance reports.</div>
+    </div>
+    <div class="howto-step">
+      <div class="howto-num">05</div>
+      <div class="howto-title">ROI Reporting</div>
+      <div class="howto-desc">Monthly dashboards show incident reduction, B-BBEE skills spend, FSCA audit readiness, and measurable productivity gains.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="section" id="industries">
+  <div class="section-tag">
+    <span class="section-num">03</span>
+    <div class="section-line"></div>
+    <span class="section-title-label">Industries</span>
+  </div>
+  <h2 class="section-h2">BUILT FOR YOUR <em>SECTOR</em></h2>
+  <p class="section-lead">Generic training platforms fail because they ignore sector-specific risk, regulation and operational context. Digital Trainer is purpose-built for each South African industry vertical.</p>
+  <div class="industries-grid">
+    <div class="industry-card">
+      <div class="industry-header">
+        <div class="industry-icon-wrap">🏦</div>
+        <div class="industry-tag">Finance & Insurance</div>
+      </div>
+      <div class="industry-title">Banking, Insurance & Asset Management</div>
+      <div class="industry-desc">South Africa's financial sector faces mounting FSCA regulatory pressure alongside an escalating wave of social engineering and ransomware attacks. Our platform delivers exactly what auditors and board risk committees demand.</div>
+      <div class="industry-features">
+        <div class="industry-feature">Live phishing simulation campaigns with real-time analytics</div>
+        <div class="industry-feature">FSCA incident response playbooks and tabletop exercises</div>
+        <div class="industry-feature">POPIA data handling certification for all staff levels</div>
+        <div class="industry-feature">Fraud detection & AML awareness modules</div>
+        <div class="industry-feature">B-BBEE skills development reporting for FSC scorecard</div>
+      </div>
+      <div class="industry-footer">
+        <div class="industry-clients">Standard Bank · ABSA · Sanlam · Nedbank · Discovery</div>
+        <div class="industry-arrow">→</div>
+      </div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-header">
+        <div class="industry-icon-wrap">⛏️</div>
+        <div class="industry-tag">Mining & Resources</div>
+      </div>
+      <div class="industry-title">Mining & Industrial Automation</div>
+      <div class="industry-desc">Modern mines run on OT networks connecting thousands of sensors, autonomous vehicles and industrial control systems. A single compromised endpoint can halt production worth millions per hour. Your security teams need to train before attackers strike.</div>
+      <div class="industry-features">
+        <div class="industry-feature">ICS/SCADA cybersecurity for industrial control systems</div>
+        <div class="industry-feature">IT/OT convergence security scenarios</div>
+        <div class="industry-feature">Offline delivery for remote operations and deep shafts</div>
+        <div class="industry-feature">Autonomous vehicle and IoT security awareness</div>
+        <div class="industry-feature">MHSA compliance training with digital audit trails</div>
+      </div>
+      <div class="industry-footer">
+        <div class="industry-clients">Sibanye-Stillwater · Anglo American · Impala Platinum</div>
+        <div class="industry-arrow">→</div>
+      </div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-header">
+        <div class="industry-icon-wrap">📡</div>
+        <div class="industry-tag">Telecoms & Technology</div>
+      </div>
+      <div class="industry-title">Telecoms Operators & Tech Companies</div>
+      <div class="industry-desc">Telecoms companies sit at the intersection of critical infrastructure and consumer data — making them priority targets for sophisticated threat actors. Rapidly upskilling engineering, NOC and security teams is a competitive and regulatory necessity.</div>
+      <div class="industry-features">
+        <div class="industry-feature">Network security and intrusion detection training</div>
+        <div class="industry-feature">5G and cloud infrastructure security modules</div>
+        <div class="industry-feature">ICASA compliance and data privacy certification</div>
+        <div class="industry-feature">SOC analyst upskilling tracks with hands-on labs</div>
+        <div class="industry-feature">Rapid deployment across distributed technical teams</div>
+      </div>
+      <div class="industry-footer">
+        <div class="industry-clients">MTN · Vodacom · Telkom · Rain · BCX</div>
+        <div class="industry-arrow">→</div>
+      </div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-header">
+        <div class="industry-icon-wrap">🎓</div>
+        <div class="industry-tag">Higher Education</div>
+      </div>
+      <div class="industry-title">Private Business Schools & Universities</div>
+      <div class="industry-desc">Corporate universities and private business schools need credible, market-aligned IT curricula they can deploy immediately — without building content from scratch. Digital Trainer provides a white-label curriculum engine with SETA accreditation built in.</div>
+      <div class="industry-features">
+        <div class="industry-feature">White-label LMS integration with your brand identity</div>
+        <div class="industry-feature">SETA-accredited short learning programmes</div>
+        <div class="industry-feature">B-BBEE skills levy spend tracking for corporate clients</div>
+        <div class="industry-feature">Real-world industry case studies from SA market</div>
+        <div class="industry-feature">Continuing education credits and digital certification</div>
+      </div>
+      <div class="industry-footer">
+        <div class="industry-clients">Regenesys · Milpark · Wits Enterprise · USB-ED</div>
+        <div class="industry-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section class="section compliance-section" id="compliance">
+  <div class="section-tag">
+    <span class="section-num">04</span>
+    <div class="section-line"></div>
+    <span class="section-title-label">Regulatory Compliance</span>
+  </div>
+  <h2 class="section-h2">BUILT FOR SA <em>REGULATION</em></h2>
+  <p class="section-lead">Compliance is not an add-on — it is the foundation. Every module, certificate, and report in Digital Trainer is designed to satisfy South African regulatory requirements out of the box.</p>
+  <div class="compliance-grid">
+    <div class="compliance-item">
+      <div class="compliance-badge">POPIA</div>
+      <div class="compliance-name">Protection of Personal Information Act</div>
+      <div class="compliance-desc">All learning data is processed in accordance with POPIA. Staff data-handling training generates certificates admissible as POPIA compliance evidence before the Information Regulator.</div>
+      <div class="compliance-check">✓ Fully Compliant</div>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-badge">B-BBEE</div>
+      <div class="compliance-name">Broad-Based Black Economic Empowerment</div>
+      <div class="compliance-desc">Automated tracking of skills development spend for Element 6 of the B-BBEE scorecard. Generate audit-ready reports for your verification agency with zero manual effort.</div>
+      <div class="compliance-check">✓ Scorecard Ready</div>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-badge">SETA</div>
+      <div class="compliance-name">Sector Education & Training Authorities</div>
+      <div class="compliance-desc">Programmes aligned with SETA unit standards and qualifications. Enables employers to claim skills levy reimbursements and meet mandatory grant requirements through accredited training delivery.</div>
+      <div class="compliance-check">✓ SETA Aligned</div>
+    </div>
+    <div class="compliance-item">
+      <div class="compliance-badge">FSCA</div>
+      <div class="compliance-name">Financial Sector Conduct Authority</div>
+      <div class="compliance-desc">Cybersecurity and conduct training modules map directly to FSCA Guidance Note 3 of 2022. Incident response simulations produce audit-ready logs demonstrating staff competency to supervisors.</div>
+      <div class="compliance-check">✓ FSCA Aligned</div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI + PRICING -->
+<div class="roi-section" id="roi">
+  <div class="roi-left">
+    <div class="section-tag">
+      <span class="section-num">05</span>
+      <div class="section-line"></div>
+      <span class="section-title-label">Measurable ROI</span>
+    </div>
+    <h2 class="section-h2">TRAINING THAT <em>PAYS</em> FOR ITSELF</h2>
+    <p class="section-lead" style="margin-bottom: 0;">Every subscription includes quarterly ROI reporting. We make the business case for your procurement committee — before you sign.</p>
+    <div class="roi-metrics">
+      <div class="roi-metric">
+        <div class="roi-metric-num">68%</div>
+        <div class="roi-metric-label">Reduction in phishing click rates</div>
+        <div class="roi-metric-desc">Average across financial sector clients after 90 days on the platform — verified against pre-training baseline phishing simulations.</div>
+      </div>
+      <div class="roi-metric">
+        <div class="roi-metric-num">3.2×</div>
+        <div class="roi-metric-label">Average ROI in year one</div>
+        <div class="roi-metric-desc">Calculated from incident cost avoidance, regulatory penalty reduction and SETA grant reimbursements against subscription cost.</div>
+      </div>
+      <div class="roi-metric">
+        <div class="roi-metric-num">40%</div>
+        <div class="roi-metric-label">Faster time-to-competency</div>
+        <div class="roi-metric-desc">AI personalisation eliminates redundant content for experienced staff and fills specific gaps — measured against traditional classroom programmes.</div>
+      </div>
+    </div>
+  </div>
+  <div class="roi-right">
+    <div class="section-tag">
+      <span class="section-num">06</span>
+      <div class="section-line"></div>
+      <span class="section-title-label">Pricing</span>
+    </div>
+    <h2 class="section-h2">ENTERPRISE <em>SUBSCRIPTION</em></h2>
+    <p class="section-lead" style="margin-bottom: 32px;">Transparent, scalable corporate pricing. No hidden fees, no per-module charges — unlimited access for your entire organisation.</p>
+    <div class="pricing-card">
+      <div class="pricing-label">Corporate Subscription — Starting From</div>
+      <div class="pricing-price"><sup>$</sup>500</div>
+      <div class="pricing-period">per month · billed annually · unlimited seats from tier 2</div>
+      <div class="pricing-features">
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          AI-personalised learning paths for all employees
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          Industry-specific simulation library (Finance, Mining, Telecoms)
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          Proctored assessments with SETA-compliant certificates
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          Full offline mode for load-shedding resilience
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          LTI / xAPI integration with your existing LMS
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          POPIA, B-BBEE and FSCA compliance reporting
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          Multilingual interface (11 SA languages)
+        </div>
+        <div class="pricing-feature">
+          <div class="pricing-feature-check">✓</div>
+          Quarterly ROI reports with measurable outcomes
+        </div>
+      </div>
+      <button class="pricing-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Request a Demo & Custom Quote →</button>
+      <div class="pricing-note">Custom enterprise pricing available for 500+ employees · Volume discounts apply</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-tag">
+    <span class="section-num">07</span>
+    <div class="section-line"></div>
+    <span class="section-title-label">Early Client Feedback</span>
+  </div>
+  <h2 class="section-h2">WHAT OUR <em>CLIENTS</em> SAY</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <div class="testimonial-text">Digital Trainer is the first platform that actually understood our regulatory context. The FSCA incident response simulations are exactly what our examiners ask about — not a generic US compliance module adapted for SA.</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">LM</div>
+        <div>
+          <div class="testimonial-name">Lerato Mokoena</div>
+          <div class="testimonial-role">CISO · Major South African Bank</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <div class="testimonial-text">Offline mode was non-negotiable for us. Our engineers train 3km underground. No other enterprise platform even tried to solve this. Digital Trainer works without connectivity and syncs cleanly when they surface. Problem solved.</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">PT</div>
+        <div>
+          <div class="testimonial-name">Piet Taljaard</div>
+          <div class="testimonial-role">Head of Digital · Platinum Mining Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-quote">"</div>
+      <div class="testimonial-text">Our B-BBEE scorecard needed 15 points on skills development. We were manually tracking spreadsheets across 8 BUs. Digital Trainer's automated reporting cut that admin by 90% and gave our auditors a clean electronic trail.</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">NB</div>
+        <div>
+          <div class="testimonial-name">Nompumelelo Buthelezi</div>
+          <div class="testimonial-role">Group L&D Director · Telecoms Operator</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section class="cta-section" id="contact">
+  <div>
+    <div class="section-tag" style="margin-bottom: 24px;">
+      <span class="section-num">08</span>
+      <div class="section-line"></div>
+      <span class="section-title-label">Get Started</span>
+    </div>
+    <h2 class="cta-title">
+      CLOSE THE
+      <span class="accent">SKILLS</span>
+      GAP NOW
+    </h2>
+    <p class="cta-desc">Book a free 30-minute demo tailored to your industry. We will show you exactly how Digital Trainer maps to your regulatory requirements, your existing LMS, and your workforce profile — before you commit to anything.</p>
+  </div>
+  <div>
+    <div class="cta-form">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Full Name</div>
+        <input type="text" class="cta-input" placeholder="Sipho Dlamini" style="width: 100%;">
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Work Email</div>
+        <input type="email" class="cta-input" placeholder="sipho@company.co.za" style="width: 100%;">
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Organisation</div>
+        <input type="text" class="cta-input" placeholder="Company or University Name" style="width: 100%;">
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Industry</div>
+        <select class="cta-select" style="width: 100%;">
+          <option value="">Select your sector</option>
+          <option>Banking & Insurance</option>
+          <option>Mining & Resources</option>
+          <option>Telecoms & Technology</option>
+          <option>Private Business School / University</option>
+          <option>Government & Public Sector</option>
+          <option>Retail & Consumer</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Number of Employees</div>
+        <select class="cta-select" style="width: 100%;">
+          <option value="">Select organisation size</option>
+          <option>50 – 200 employees</option>
+          <option>200 – 500 employees</option>
+          <option>500 – 2,000 employees</option>
+          <option>2,000 – 10,000 employees</option>
+          <option>10,000+ employees</option>
+        </select>
+      </div>
+      <button class="cta-btn">Book Free Demo — 30 Minutes →</button>
+      <div class="cta-note">No credit card required. We typically respond within 4 business hours. All data handled in accordance with POPIA.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">DT</div>
+        <div class="footer-logo-text">Digital <span>Trainer</span></div>
+      </div>
+      <div class="footer-tagline">South Africa's leading AI-powered B2B platform for corporate IT skills development. Built for local compliance, built for local conditions.</div>
+      <div class="footer-compliance-row">
+        <span class="footer-badge">POPIA</span>
+        <span class="footer-badge">B-BBEE</span>
+        <span class="footer-badge">SETA</span>
+        <span class="footer-badge">FSCA</span>
+        <span class="footer-badge">ISO 27001</span>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <div class="footer-col-links">
+        <a href="#">AI Personalisation Engine</a>
+        <a href="#">Proctored Simulators</a>
+        <a href="#">Offline Mode</a>
+        <a href="#">LTI / xAPI Integration</a>
+        <a href="#">Multilingual Interface</a>
+        <a href="#">ROI Analytics</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Industries</div>
+      <div class="footer-col-links">
+        <a href="#">Banking & Insurance</a>
+        <a href="#">Mining & Resources</a>
+        <a href="#">Telecoms & Tech</a>
+        <a href="#">Private Universities</a>
+        <a href="#">Government</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-col-links">
+        <a href="#">About Us</a>
+        <a href="#">Compliance</a>
+        <a href="#">Case Studies</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2024 Digital Trainer · Registered in South Africa · POPIA Compliant</div>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">POPIA Notice</a>
+      <a href="#">B-BBEE Certificate</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Glow cursor
+  const glow = document.getElementById('glow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+
+  // Scroll fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll(
+    '.feature-card, .industry-card, .compliance-item, .howto-step, ' +
+    '.roi-metric, .testimonial-card, .problem-stat-row, .pricing-card'
+  ).forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+    observer.observe(el);
+  });
+
+  // Animate progress bar on load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const fill = document.querySelector('.dash-progress-fill');
+      if (fill) fill.style.width = '74%';
+    }, 800);
+  });
+
+  // Active nav link highlight on scroll
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 120;
+      if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      if (link.getAttribute('href') === '#' + current) {
+        link.style.color = 'var(--orange)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
